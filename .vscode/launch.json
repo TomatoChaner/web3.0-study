@@ -1,0 +1,95 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch singleNumber",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/1-singleNumber/singleNumber.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch isPalindrome",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/2-isPalindrome/isPalindrome.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch isValid",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/3-isValid/isValid.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch longestCommonPrefix",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/4-longestCommonPrefix/longestCommonPrefix.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch plusOne",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/5-plusOne/plusOne.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch removeDuplicates",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/6-removeDuplicates/removeDuplicates.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch merge",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/7-merge/merge.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch twoSum",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task1/8-twoSum/twoSum.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch Current File",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Debug Current Package",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        }
+    ]
+}
