@@ -1,4 +1,4 @@
-package pointer
+package main
 
 /*
 题目 ：编写一个Go程序，定义一个函数，

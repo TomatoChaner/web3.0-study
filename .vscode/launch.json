@@ -60,7 +60,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/go-base/task/task1/7-merge/merge.go",
+            "program": "${workspaceFolder}/go-base/task/task1/7_merge/merge.go",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/go-base"
         },
@@ -70,6 +70,78 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/go-base/task/task1/8_two_sum/two_sum.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch pointer_1",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/1_pointer/pointer_1.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch pointer_2",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/2_pointer/pointer_2.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch goroutine_1",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/3_goroutine/goroutine_1.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch groutine_2",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/4_groutine/groutine_2.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch object_oriented_1",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/5_object_oriented/object_oriented_1.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch object_oriented_2",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/6_object_oriented/object_oriented_2.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch channel_1",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/7_channel/channel_1.go",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/go-base"
+        },
+        {
+            "name": "Launch channel_2",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go-base/task/task2/8_channel/channel_2.go",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/go-base"
         },
