@@ -1,0 +1,30 @@
+Name: blog
+Host: 0.0.0.0
+Port: 8888
+
+# Database configuration
+Database:
+  Host: localhost
+  Port: 3306
+  Username: root
+  Password: lh123456
+  DBName: go_zero_blog
+  Charset: utf8mb4
+  ParseTime: true
+  Loc: Local
+
+# JWT configuration
+JWT:
+  Secret: go_zero_blog_jwt_secret_key_2024_secure
+  Expire: 86400  # 24 hours in seconds
+
+# Auth configuration for JWT middleware
+Auth:
+  AccessSecret: go_zero_blog_jwt_secret_key_2024_secure
+  AccessExpire: 86400  # 24 hours in seconds
+
+# Log configuration
+AppLog:
+  Level: info
+  Mode: file
+  Path: logs/blog.log
