@@ -1,0 +1,196 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "candidate",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newVoteCount",
+						"type": "uint256"
+					}
+				],
+				"name": "VoteCast",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [],
+				"name": "VotesReset",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "candidate",
+						"type": "string"
+					}
+				],
+				"name": "getVotes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "num",
+						"type": "uint256"
+					}
+				],
+				"name": "intToRoman",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "resetVotes",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "str",
+						"type": "string"
+					}
+				],
+				"name": "reverseString",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "s",
+						"type": "string"
+					}
+				],
+				"name": "romanToInt",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "candidate",
+						"type": "string"
+					}
+				],
+				"name": "vote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"getVotes(string)": {
+					"details": "获取某个候选人的得票数",
+					"params": {
+						"candidate": "候选人名称"
+					},
+					"returns": {
+						"_0": "候选人的得票数"
+					}
+				},
+				"resetVotes()": {
+					"details": "重置所有候选人的得票数"
+				},
+				"vote(string)": {
+					"details": "投票函数，允许用户投票给某个候选人",
+					"params": {
+						"candidate": "候选人名称"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"intToRoman(uint256)": {
+					"notice": "用 solidity 实现整数转罗马数字 题目描述：将一个整数转换为罗马数字。输入 1994，输出 \"MCMXCIV\""
+				},
+				"reverseString(string)": {
+					"notice": "反转字符串 (Reverse String),  题目描述：反转一个字符串。输入 \"abcde\"，输出 \"edcba\""
+				},
+				"romanToInt(string)": {
+					"notice": "用 solidity 实现罗马数字转数整数 题目描述：将一个罗马数字转换为整数。输入 \"MCMXCIV\"，输出 1994"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"task1.sol": "Voting"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"task1.sol": {
+			"keccak256": "0xee5fea0aab6eb0c26207256ed0595b5c7c22433872208096a17a11877af6b30e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ef21c985287b01abdc475a04b5e941c8a9d43f17144f5b9e6b9efe5be59beec1",
+				"dweb:/ipfs/QmV5rgxdMDEnHDQR4RuGTPMEpeQKJxaRpCdcQTH5kKWxiF"
+			]
+		}
+	},
+	"version": 1
+}
