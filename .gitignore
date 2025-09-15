@@ -1,0 +1,40 @@
+# Node.js dependencies
+node_modules/
+
+# npm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Hidden files (dot files) - but keep essential ones
+.*
+!.gitignore
+!.gitattributes
+!.github/
+!.vscode/
+!.editorconfig
+!.eslintrc*
+!.prettierrc*
+!.babelrc*
+!.nvmrc
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
