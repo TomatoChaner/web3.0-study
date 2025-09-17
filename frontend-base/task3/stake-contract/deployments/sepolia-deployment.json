@@ -1,0 +1,17 @@
+{
+  "network": "sepolia",
+  "deployer": "0xeb3C5afb94540adE3A5145969E8588422582f6cA",
+  "timestamp": "2025-09-17T09:22:01.668Z",
+  "contracts": {
+    "MetaNodeToken": {
+      "address": "0x1795548D2f9b928F02cA6d8aA70Bf5d9ae712342",
+      "name": "MetaNode Token",
+      "symbol": "MNT",
+      "initialSupply": "1000000000000000000000000"
+    },
+    "StakeContract": {
+      "address": "0x176E4Ff9F5587D5751a854e87Bd4BcDe6d79B996",
+      "rewardToken": "0x1795548D2f9b928F02cA6d8aA70Bf5d9ae712342"
+    }
+  }
+}

@@ -46,7 +46,6 @@ async function main() {
 
     // Grant MINTER_ROLE to StakeContract
     console.log("\n🔑 Setting up permissions...");
-    const MINTER_ROLE = await metaNodeToken.MINTER_ROLE();
     const grantTx = await metaNodeToken.grantMinterRole(stakeContract.target);
     await grantTx.wait();
     console.log("✅ Granted MINTER_ROLE to StakeContract");
