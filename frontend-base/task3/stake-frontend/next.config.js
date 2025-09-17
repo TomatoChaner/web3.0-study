@@ -20,7 +20,6 @@ const nextConfig = {
     ],
   },
   // 优化 Vercel 部署
-  output: 'standalone',
   poweredByHeader: false,
   compress: true,
 };
