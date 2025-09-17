@@ -5,6 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import UserDashboard from '@/components/dashboard/UserDashboard';
 import PoolList from '@/components/stake/PoolList';
+import BackendStatus from '@/components/BackendStatus';
 
 export default function Home() {
   const { isConnected } = useAccount();
@@ -66,6 +67,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* 后端连接状态 */}
+        <BackendStatus />
 
         {/* 主要内容区域 */}
         {isConnected ? (

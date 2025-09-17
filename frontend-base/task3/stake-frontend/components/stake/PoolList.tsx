@@ -1,150 +1,133 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, TrendingUp, TrendingDown } from 'lucide-react';
+import { Search, Filter, Grid, List } from 'lucide-react';
 import PoolCard from './PoolCard';
 
-interface PoolListProps {
-  className?: string;
-}
-
-type SortOption = 'apy' | 'tvl' | 'rewards' | 'newest';
-type FilterOption = 'all' | 'active' | 'paused';
-
-export default function PoolList({ className = '' }: PoolListProps) {
+export default function PoolList() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('apy');
-  const [filterBy, setFilterBy] = useState<FilterOption>('all');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [filterActive, setFilterActive] = useState(true);
 
-  // 模拟质押池数据 - 实际应用中应该从合约获取
-  const poolIds = [0, 1, 2]; // 假设有3个质押池
-
-  const handleSortChange = (newSort: SortOption) => {
-    if (sortBy === newSort) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(newSort);
-      setSortOrder('desc');
+  // 模拟池子数据 - 实际项目中只有一个直接质押池
+  const pools = [
+    {
+      id: 1,
+      name: 'ETH 直接质押',
+      isActive: true,
     }
-  };
+  ];
+
+  const filteredPools = pools.filter(pool => {
+    const matchesSearch = pool.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = !filterActive || pool.isActive;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
-    <div className={`space-y-6 ${className}`}>
-      {/* 搜索和筛选栏 */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* 搜索框 */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+    <div className="space-y-6">
+      {/* 头部 */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">质押池</h2>
+          <p className="text-gray-500 dark:text-gray-400">选择质押池开始赚取奖励</p>
+        </div>
+
+        {/* 搜索和过滤 */}
+        <div className="flex gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="搜索质押池..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
-          {/* 筛选器 */}
-          <div className="flex gap-3">
-            {/* 状态筛选 */}
-            <select
-              value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value as FilterOption)}
-              className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          <button
+            onClick={() => setFilterActive(!filterActive)}
+            className={`px-4 py-2 rounded-lg border transition-colors ${
+              filterActive
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
+          >
+            <Filter className="w-4 h-4" />
+          </button>
+
+          <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`px-3 py-2 ${
+                viewMode === 'grid'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
             >
-              <option value="all">全部状态</option>
-              <option value="active">活跃中</option>
-              <option value="paused">已暂停</option>
-            </select>
-
-            {/* 排序选择 */}
-            <div className="flex">
-              <select
-                value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value as SortOption)}
-                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent border-r-0"
-              >
-                <option value="apy">按收益率</option>
-                <option value="tvl">按总锁仓</option>
-                <option value="rewards">按奖励</option>
-                <option value="newest">按时间</option>
-              </select>
-              <button
-                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-r-lg bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {sortOrder === 'desc' ? (
-                  <TrendingDown className="w-5 h-5" />
-                ) : (
-                  <TrendingUp className="w-5 h-5" />
-                )}
-              </button>
-            </div>
+              <Grid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`px-3 py-2 ${
+                viewMode === 'list'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+            >
+              <List className="w-4 h-4" />
+            </button>
           </div>
-        </div>
-
-        {/* 快速筛选标签 */}
-        <div className="flex flex-wrap gap-2 mt-4">
-          <button
-            onClick={() => setFilterBy('all')}
-            className={`px-3 py-1 rounded-full text-sm transition-colors ${
-              filterBy === 'all'
-                ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
-            }`}
-          >
-            全部
-          </button>
-          <button
-            onClick={() => setFilterBy('active')}
-            className={`px-3 py-1 rounded-full text-sm transition-colors ${
-              filterBy === 'active'
-                ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
-            }`}
-          >
-            活跃中
-          </button>
-          <button
-            onClick={() => setFilterBy('paused')}
-            className={`px-3 py-1 rounded-full text-sm transition-colors ${
-              filterBy === 'paused'
-                ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
-            }`}
-          >
-            已暂停
-          </button>
         </div>
       </div>
 
-      {/* 质押池列表 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {poolIds.map((poolId) => (
-          <PoolCard
-            key={poolId}
-            poolId={poolId}
-            className="h-full"
-          />
-        ))}
-      </div>
-
-      {/* 空状态 */}
-      {poolIds.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-            <Filter className="w-8 h-8 text-gray-400" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            没有找到质押池
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            尝试调整搜索条件或筛选器
+      {/* 过滤器提示 */}
+      {filterActive && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+          <p className="text-sm text-blue-700 dark:text-blue-300">
+            <Filter className="w-4 h-4 inline mr-2" />
+            仅显示活跃的质押池
           </p>
         </div>
       )}
+
+      {/* 池子列表 */}
+      {filteredPools.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            未找到质押池
+          </h3>
+          <p className="text-gray-500 dark:text-gray-400">
+            尝试调整搜索条件或过滤器
+          </p>
+        </div>
+      ) : (
+        <div className={
+          viewMode === 'grid'
+            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+            : 'space-y-4'
+        }>
+          {filteredPools.map((pool) => (
+            <PoolCard
+              key={pool.id}
+              poolId={pool.id}
+              className={viewMode === 'list' ? 'w-full' : ''}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* 统计信息 */}
+      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+          <span>显示 {filteredPools.length} 个质押池</span>
+          <span>共 {pools.length} 个池子</span>
+        </div>
+      </div>
     </div>
   );
 }

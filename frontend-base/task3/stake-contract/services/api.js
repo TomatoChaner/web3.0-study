@@ -13,7 +13,7 @@ class APIServer {
         this.port = process.env.API_PORT || 3001;
         this.supabaseService = new SupabaseService();
         this.eventListener = new EventListener();
-        this.provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+        this.provider = new ethers.JsonRpcProvider(process.env.RPC_URL || 'http://127.0.0.1:8545');
         
         this.setupMiddleware();
         this.setupRoutes();
@@ -25,9 +25,52 @@ class APIServer {
         this.app.use(helmet());
         
         // CORS配置
+        const allowedOrigins = [
+            'http://localhost:3000', // 本地开发
+            'http://localhost:3001', // 本地API测试
+            process.env.FRONTEND_URL, // 环境变量指定的前端URL
+        ].filter(Boolean); // 过滤掉undefined值
+
+        // 处理逗号分隔的CORS_ORIGIN
+        if (process.env.CORS_ORIGIN) {
+            const corsOrigins = process.env.CORS_ORIGIN.split(',').map(origin => origin.trim());
+            allowedOrigins.push(...corsOrigins);
+        }
+
+        // 如果是生产环境，添加常见的Vercel域名模式
+        if (process.env.NODE_ENV === 'production') {
+            allowedOrigins.push(
+                /^https:\/\/.*\.vercel\.app$/,
+                /^https:\/\/.*\.vercel\.com$/
+            );
+        }
+
         this.app.use(cors({
-            origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-            credentials: true
+            origin: (origin, callback) => {
+                // 允许没有origin的请求（如移动应用、Postman等）
+                if (!origin) return callback(null, true);
+                
+                // 检查origin是否在允许列表中
+                const isAllowed = allowedOrigins.some(allowedOrigin => {
+                    if (typeof allowedOrigin === 'string') {
+                        return origin === allowedOrigin;
+                    }
+                    if (allowedOrigin instanceof RegExp) {
+                        return allowedOrigin.test(origin);
+                    }
+                    return false;
+                });
+                
+                if (isAllowed) {
+                    callback(null, true);
+                } else {
+                    console.warn(`CORS blocked origin: ${origin}`);
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
+            credentials: true,
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
         }));
 
         // 请求解析

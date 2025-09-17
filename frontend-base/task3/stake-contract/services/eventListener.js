@@ -4,7 +4,7 @@ require('dotenv').config();
 
 class EventListener {
     constructor() {
-        this.provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+        this.provider = new ethers.JsonRpcProvider(process.env.RPC_URL || 'http://127.0.0.1:8545');
         this.supabaseService = new SupabaseService();
         this.stakeContract = null;
         this.tokenContract = null;
@@ -16,7 +16,7 @@ class EventListener {
         try {
             // 读取部署信息
             const fs = require('fs');
-            const deploymentPath = './deployments/deployment.json';
+            const deploymentPath = './deployments/localhost-deployment.json';
             
             if (!fs.existsSync(deploymentPath)) {
                 throw new Error('Deployment file not found. Please deploy contracts first.');
@@ -30,13 +30,13 @@ class EventListener {
 
             // 创建合约实例
             this.stakeContract = new ethers.Contract(
-                deployment.stakeContract.address,
+                deployment.contracts.StakeContract.address,
                 StakeContractABI,
                 this.provider
             );
 
             this.tokenContract = new ethers.Contract(
-                deployment.metaNodeToken.address,
+                deployment.contracts.MetaNodeToken.address,
                 MetaNodeTokenABI,
                 this.provider
             );
@@ -45,8 +45,8 @@ class EventListener {
             await this.loadLastProcessedBlock();
 
             console.log('✅ Event listener initialized successfully');
-            console.log(`📍 Stake Contract: ${deployment.stakeContract.address}`);
-            console.log(`🪙 Token Contract: ${deployment.metaNodeToken.address}`);
+            console.log(`📍 Stake Contract: ${deployment.contracts.StakeContract.address}`);
+            console.log(`🪙 Token Contract: ${deployment.contracts.MetaNodeToken.address}`);
             console.log(`📦 Starting from block: ${this.lastProcessedBlock}`);
 
         } catch (error) {
@@ -180,10 +180,7 @@ class EventListener {
             await this.handleRewardsClaimedEvent(event);
         });
 
-        this.stakeContract.on('EmergencyWithdraw', async (user, amount, event) => {
-            console.log(`🚨 Emergency withdraw: ${user} withdrew ${ethers.utils.formatEther(amount)} ETH`);
-            await this.handleEmergencyWithdrawEvent(event);
-        });
+        // EmergencyWithdraw 是函数不是事件，不需要监听
 
         // 监听代币事件
         this.tokenContract.on('Transfer', async (from, to, amount, event) => {
@@ -221,9 +218,7 @@ class EventListener {
                 case 'RewardsClaimed':
                     await this.handleRewardsClaimedEvent(event);
                     break;
-                case 'EmergencyWithdraw':
-                    await this.handleEmergencyWithdrawEvent(event);
-                    break;
+                // EmergencyWithdraw 不是事件，已移除
                 case 'Transfer':
                     if (event.address === this.tokenContract.address) {
                         await this.handleTokenTransferEvent(event);

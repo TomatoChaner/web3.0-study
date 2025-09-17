@@ -19,6 +19,10 @@ class ServiceManager {
             // 检查环境变量
             this.checkEnvironmentVariables();
 
+            // 等待Hardhat节点启动
+            console.log('⏳ Waiting for Hardhat node to start...');
+            await this.waitForHardhatNode();
+
             // 启动API服务器（包含事件监听器）
             console.log('📡 Starting API Server...');
             await this.apiServer.start();
@@ -37,6 +41,25 @@ class ServiceManager {
             console.error('❌ Failed to start services:', error);
             process.exit(1);
         }
+    }
+
+    async waitForHardhatNode() {
+        const { ethers } = require('ethers');
+        const maxRetries = 30;
+        const retryDelay = 2000; // 2秒
+
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+                await provider.getNetwork();
+                console.log('✅ Hardhat node is ready!');
+                return;
+            } catch (error) {
+                console.log(`⏳ Waiting for Hardhat node... (${i + 1}/${maxRetries})`);
+                await new Promise(resolve => setTimeout(resolve, retryDelay));
+            }
+        }
+        throw new Error('Hardhat node failed to start within timeout period');
     }
 
     checkEnvironmentVariables() {

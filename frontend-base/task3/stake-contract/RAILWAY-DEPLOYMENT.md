@@ -37,11 +37,13 @@ railway login
 ### 3. 准备环境变量
 
 复制环境变量模板：
+
 ```bash
 cp .env.example .env
 ```
 
 编辑 `.env` 文件，填入实际值：
+
 - `RPC_URL`: Infura 或 Alchemy 的 RPC 端点
 - `SUPABASE_*`: Supabase 项目配置
 - `STAKE_CONTRACT_ADDRESS`: 已部署的合约地址
@@ -68,16 +70,19 @@ cp .env.example .env
 ### 方法二：手动部署
 
 1. **初始化项目**
+
    ```bash
    railway init
    ```
 
 2. **添加 PostgreSQL 数据库**
+
    ```bash
    railway add postgresql
    ```
 
 3. **设置环境变量**
+
    ```bash
    # 从 .env 文件批量设置
    railway variables set $(cat .env | grep -v '^#' | xargs)
@@ -92,15 +97,15 @@ cp .env.example .env
 
 ### 必需的环境变量
 
-| 变量名 | 描述 | 示例值 |
-|--------|------|--------|
-| `NODE_ENV` | 运行环境 | `production` |
-| `RPC_URL` | 区块链 RPC 端点 | `https://sepolia.infura.io/v3/YOUR_KEY` |
-| `CHAIN_ID` | 区块链网络 ID | `11155111` (Sepolia) |
-| `STAKE_CONTRACT_ADDRESS` | 质押合约地址 | `0x...` |
-| `METANODE_TOKEN_ADDRESS` | 代币合约地址 | `0x...` |
-| `FRONTEND_URL` | 前端域名 | `https://your-app.vercel.app` |
-| `JWT_SECRET` | JWT 密钥 | `your_secret_key` |
+| 变量名                   | 描述            | 示例值                                  |
+| ------------------------ | --------------- | --------------------------------------- |
+| `NODE_ENV`               | 运行环境        | `production`                            |
+| `RPC_URL`                | 区块链 RPC 端点 | `https://sepolia.infura.io/v3/YOUR_KEY` |
+| `CHAIN_ID`               | 区块链网络 ID   | `11155111` (Sepolia)                    |
+| `STAKE_CONTRACT_ADDRESS` | 质押合约地址    | `0x...`                                 |
+| `METANODE_TOKEN_ADDRESS` | 代币合约地址    | `0x...`                                 |
+| `FRONTEND_URL`           | 前端域名        | `https://your-app.vercel.app`           |
+| `JWT_SECRET`             | JWT 密钥        | `your_secret_key`                       |
 
 ### Railway 自动提供的变量
 
@@ -126,15 +131,18 @@ stake-contract/
 ## 🔄 部署流程
 
 ### 1. 构建阶段
+
 - 安装依赖 (`npm install`)
 - 编译智能合约 (`npm run compile`)
 
 ### 2. 启动阶段
+
 - 设置环境变量
 - 启动 API 服务器 (`npm run start:production`)
 - 健康检查 (`/health` 端点)
 
 ### 3. 运行时
+
 - API 服务监听 HTTP 请求
 - 事件监听器监控区块链事件
 - 数据库存储应用状态
@@ -142,6 +150,7 @@ stake-contract/
 ## 🔍 监控和调试
 
 ### 查看日志
+
 ```bash
 # 实时日志
 railway logs
@@ -151,6 +160,7 @@ railway logs
 ```
 
 ### 检查服务状态
+
 ```bash
 # 服务状态
 railway status
@@ -163,6 +173,7 @@ railway domain
 ```
 
 ### 健康检查
+
 访问 `https://your-app.railway.app/health` 检查服务状态
 
 ## 🛠️ 常用命令
@@ -198,6 +209,7 @@ railway domain add example.com # 添加自定义域名
 
 **问题**: 构建或启动失败
 **解决方案**:
+
 - 检查 `package.json` 中的 `start` 脚本
 - 确保所有依赖都在 `dependencies` 中
 - 查看部署日志: `railway logs`
@@ -206,6 +218,7 @@ railway domain add example.com # 添加自定义域名
 
 **问题**: 应用无法读取环境变量
 **解决方案**:
+
 - 确认变量已设置: `railway variables`
 - 检查变量名拼写
 - 重新部署: `railway redeploy`
@@ -214,6 +227,7 @@ railway domain add example.com # 添加自定义域名
 
 **问题**: 无法连接到 PostgreSQL
 **解决方案**:
+
 - 确认已添加数据库: `railway add postgresql`
 - 检查 `DATABASE_URL` 变量
 - 验证数据库迁移是否成功
@@ -222,6 +236,7 @@ railway domain add example.com # 添加自定义域名
 
 **问题**: 无法与智能合约交互
 **解决方案**:
+
 - 验证 `RPC_URL` 可访问
 - 确认合约地址正确
 - 检查网络 ID 匹配
@@ -229,16 +244,19 @@ railway domain add example.com # 添加自定义域名
 ## 🔒 安全最佳实践
 
 ### 1. 环境变量安全
+
 - 不要在代码中硬编码密钥
 - 使用强密码和随机密钥
 - 定期轮换 API 密钥
 
 ### 2. 网络安全
+
 - 配置正确的 CORS 策略
 - 使用 HTTPS (Railway 自动提供)
 - 实施速率限制
 
 ### 3. 数据库安全
+
 - 使用连接池
 - 实施适当的访问控制
 - 定期备份数据
@@ -246,11 +264,13 @@ railway domain add example.com # 添加自定义域名
 ## 📊 性能优化
 
 ### 1. 应用优化
+
 - 使用连接池管理数据库连接
 - 实施缓存策略
 - 优化 API 响应时间
 
 ### 2. 监控设置
+
 - 设置健康检查
 - 监控应用指标
 - 配置告警通知
@@ -273,7 +293,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
       - run: npm ci
       - run: npm test
       - uses: railway/cli@v2
