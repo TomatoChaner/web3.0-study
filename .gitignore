@@ -7,9 +7,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment variables
-.env
-.env.local
-.env.production
+!.env
+!.env.local
+!.env.production
 
 # Hidden files (dot files) - but keep essential ones
 .*

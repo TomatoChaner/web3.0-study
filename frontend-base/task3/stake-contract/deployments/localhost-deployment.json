@@ -1,0 +1,26 @@
+{
+  "network": "localhost",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "timestamp": "2025-09-17T07:30:03.784Z",
+  "contracts": {
+    "MetaNodeToken": {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "name": "MetaNode Token",
+      "symbol": "MNT",
+      "initialSupply": "1000000000000000000000000",
+      "maxSupply": "100000000000000000000000000"
+    },
+    "StakeContract": {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "rewardToken": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "minStakeAmount": "10000000000000000",
+      "maxStakeAmount": "100000000000000000000",
+      "rewardRate": "100"
+    }
+  },
+  "transactionHashes": {
+    "metaNodeToken": "0x36606a69ac5bbc46e8613af624d79ef101796957cb69810a9a2717c3c7dbfaaa",
+    "stakeContract": "0x23dc69b3778fd37cafb643f1dc2cb67457a424f7d671d7544f72b7779270f99c",
+    "grantMinterRole": "0x0d536753f67ffd44768b68764b2b325c716607aabfbc2da9bbe581edf40bfa7f"
+  }
+}

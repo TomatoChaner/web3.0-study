@@ -76,9 +76,60 @@ npm run start
 
 ## 🔧 第三步：环境变量配置
 
-### 3.1 添加环境变量
-1. 在项目设置页面，找到 "Environment Variables" 选项
-2. 添加以下环境变量：
+### 3.1 自动化环境变量配置 (推荐)
+
+#### 方法一：使用 .env.local 文件自动同步
+由于项目已配置 `.env.local` 文件可提交到 Git，Vercel 会自动读取：
+
+1. **确保 .env.local 文件已提交**：
+```bash
+# 检查文件是否被 Git 跟踪
+git status
+git add .env.local
+git commit -m "Add environment variables"
+git push
+```
+
+2. **Vercel 自动检测**：
+   - Vercel 会自动读取项目根目录的 `.env.local` 文件
+   - 无需手动在控制台配置环境变量
+   - 支持所有 `NEXT_PUBLIC_` 开头的变量
+
+#### 方法二：使用 Vercel CLI 批量导入
+```bash
+# 安装 Vercel CLI
+npm i -g vercel
+
+# 登录 Vercel
+vercel login
+
+# 导入环境变量
+vercel env pull .env.local
+vercel env add < .env.local
+```
+
+#### 方法三：使用 GitHub Actions 自动同步
+创建 `.github/workflows/deploy.yml`：
+```yaml
+name: Deploy to Vercel
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID }}
+          vercel-project-id: ${{ secrets.PROJECT_ID }}
+```
+
+### 3.2 手动配置环境变量 (备选方案)
+如果需要手动配置，在项目设置页面添加：
 
 ```env
 # Supabase 配置
