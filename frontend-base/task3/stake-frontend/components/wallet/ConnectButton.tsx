@@ -3,7 +3,7 @@
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet, ChevronDown, Copy, ExternalLink, LogOut } from 'lucide-react';
 import { useState } from 'react';
-import { formatAddress } from '@/utils/format';
+import { formatAddress } from '../../utils/format';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 import { toast } from 'react-hot-toast';
 

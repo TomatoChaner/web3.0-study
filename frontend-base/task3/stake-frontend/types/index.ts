@@ -1,90 +1,52 @@
-// 质押池信息类型
+// 基础类型定义
+export interface Address {
+  address: `0x${string}`;
+}
+
+// 质押池信息（适配直接质押模式）
 export interface PoolInfo {
   id: number;
-  stakingToken: `0x${string}`;
+  name: string;
+  description: string;
+  rewardToken: `0x${string}`;
+  totalStaked: bigint;
   rewardRate: bigint;
-  totalStaked: bigint;
   minStakeAmount: bigint;
-  lockPeriod: bigint;
+  maxStakeAmount: bigint;
   isActive: boolean;
-  tokenSymbol?: string;
-  tokenName?: string;
-  tokenDecimals?: number;
-  apy?: number;
+  apy: number; // 计算得出的APY
 }
 
-// 用户质押信息类型
-export interface UserStake {
-  poolId: number;
+// 用户质押信息
+export interface UserStakeInfo {
   amount: bigint;
-  stakeTime: bigint;
-  lastRewardTime: bigint;
-  pendingRewards?: bigint;
+  rewardDebt: bigint;
+  lastStakeTime: bigint;
+  isActive: boolean;
 }
 
-// 解质押请求类型
-export interface UnstakeRequest {
-  poolId: number;
+// 质押事件
+export interface StakeEvent {
+  user: `0x${string}`;
   amount: bigint;
-  requestTime: bigint;
-  canWithdraw?: boolean;
-  timeRemaining?: bigint;
+  timestamp: bigint;
+  transactionHash: string;
 }
 
-// 用户仪表板数据类型
-export interface UserDashboard {
-  totalStaked: bigint;
-  totalRewards: bigint;
-  activeStakes: UserStake[];
-  unstakeRequests: UnstakeRequest[];
-  claimableRewards: bigint;
+// 取消质押事件
+export interface UnstakeEvent {
+  user: `0x${string}`;
+  amount: bigint;
+  timestamp: bigint;
+  transactionHash: string;
 }
 
-// 交易状态类型
-export type TransactionStatus = 'idle' | 'pending' | 'success' | 'error';
-
-// 交易类型
-export type TransactionType = 'stake' | 'unstake' | 'claim' | 'withdraw' | 'approve';
-
-// 交易信息类型
-export interface TransactionInfo {
-  type: TransactionType;
-  status: TransactionStatus;
-  hash?: string;
-  error?: string;
-  poolId?: number;
-  amount?: bigint;
-}
-
-// 钱包状态类型
-export interface WalletState {
-  isConnected: boolean;
-  address?: `0x${string}`;
-  chainId?: number;
-  balance?: bigint;
-  isCorrectNetwork: boolean;
-}
-
-// 合约状态类型
-export interface ContractState {
-  isLoading: boolean;
-  error?: string;
-  emergencyWithdrawEnabled: boolean;
-}
-
-// 表单数据类型
-export interface StakeFormData {
-  poolId: number;
-  amount: string;
-  isValid: boolean;
-  error?: string;
-}
-
-export interface UnstakeFormData {
-  poolId: number;
-  amount: string;
-  isValid: boolean;
-  error?: string;
+// 奖励分发事件
+export interface RewardDistributedEvent {
+  user: `0x${string}`;
+  amount: bigint;
+  timestamp: bigint;
+  transactionHash: string;
 }
 
 // API 响应类型
@@ -95,130 +57,93 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// 分页类型
-export interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
+// 健康检查响应
+export interface HealthCheckResponse {
+  status: string;
+  timestamp: string;
+  version?: string;
+  database?: {
+    connected: boolean;
+    latency?: number;
+  };
+  blockchain?: {
+    connected: boolean;
+    network?: string;
+    blockNumber?: number;
+  };
 }
 
-// 排序类型
-export interface SortConfig {
-  field: string;
-  direction: 'asc' | 'desc';
-}
-
-// 过滤器类型
-export interface FilterConfig {
-  isActive?: boolean;
-  minApy?: number;
-  maxApy?: number;
-  hasUserStake?: boolean;
-}
-
-// 统计数据类型
-export interface StatsData {
-  totalValueLocked: bigint;
-  totalUsers: number;
-  totalPools: number;
-  averageApy: number;
+// 统计数据
+export interface PlatformStats {
+  totalStaked: bigint;
   totalRewardsDistributed: bigint;
+  totalUsers: number;
+  averageAPY: number;
 }
 
-// 历史记录类型
-export interface HistoryRecord {
-  id: string;
-  type: TransactionType;
-  poolId: number;
-  amount: bigint;
-  timestamp: bigint;
-  txHash: string;
-  status: 'success' | 'failed';
-  blockNumber?: number;
+// 用户仪表板数据
+export interface UserDashboardData {
+  totalStaked: bigint;
+  totalRewards: bigint;
+  pendingRewards: bigint;
+  activeStakes: number;
+  avgAPY: number;
+  stakingDuration: number;
 }
 
-// 通知类型
-export interface Notification {
-  id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  title: string;
-  message: string;
+// 交易状态
+export type TransactionStatus = 'pending' | 'confirmed' | 'failed';
+
+// 交易信息
+export interface TransactionInfo {
+  hash: string;
+  status: TransactionStatus;
   timestamp: number;
-  isRead: boolean;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-}
-
-// 主题类型
-export type Theme = 'light' | 'dark' | 'system';
-
-// 语言类型
-export type Language = 'zh-CN' | 'en-US';
-
-// 应用设置类型
-export interface AppSettings {
-  theme: Theme;
-  language: Language;
-  notifications: {
-    enabled: boolean;
-    sound: boolean;
-    desktop: boolean;
-  };
-  privacy: {
-    analytics: boolean;
-    crashReports: boolean;
-  };
+  type: 'stake' | 'unstake' | 'claim';
+  amount?: bigint;
 }
 
 // 错误类型
-export interface AppError {
+export interface ContractError {
   code: string;
   message: string;
   details?: any;
-  timestamp: number;
 }
 
-// 加载状态类型
-export interface LoadingState {
-  [key: string]: boolean;
+// 网络配置
+export interface NetworkConfig {
+  chainId: number;
+  name: string;
+  rpcUrl: string;
+  blockExplorer: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
 }
 
-// 模态框状态类型
-export interface ModalState {
-  isOpen: boolean;
-  type?: 'stake' | 'unstake' | 'claim' | 'withdraw' | 'settings';
-  data?: any;
+// 合约地址配置
+export interface ContractAddresses {
+  STAKE_CONTRACT: `0x${string}`;
+  METANODE_TOKEN: `0x${string}`;
 }
 
-// 表格列配置类型
-export interface TableColumn<T> {
-  key: keyof T;
-  label: string;
-  sortable?: boolean;
-  render?: (value: any, record: T) => React.ReactNode;
-  width?: string;
-  align?: 'left' | 'center' | 'right';
+// 分页参数
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
-// 图表数据类型
-export interface ChartDataPoint {
-  timestamp: number;
-  value: number;
-  label?: string;
+// 分页响应
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
-
-export interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    borderColor?: string;
-    backgroundColor?: string;
-    fill?: boolean;
-  }[];
-}
-
-// 所有类型已通过interface和type声明导出

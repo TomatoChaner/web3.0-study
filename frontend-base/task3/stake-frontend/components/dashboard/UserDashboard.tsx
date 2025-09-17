@@ -1,248 +1,98 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Wallet, 
-  TrendingUp, 
-  Clock, 
-  Gift, 
-  Eye, 
-  EyeOff,
-  RefreshCw,
-  ExternalLink 
-} from 'lucide-react';
-import { formatTokenValue, formatPercentage, formatDuration } from '@/utils/format';
-import { useAccount, useBalance } from 'wagmi';
-import { useStakeContract } from '@/hooks/useStakeContract';
+import { useAccount } from 'wagmi';
+import { Wallet, TrendingUp, Clock, Award } from 'lucide-react';
 
-interface UserDashboardProps {
-  className?: string;
-}
+import { useStakeContract } from '../../hooks/useStakeContract';
 
-export default function UserDashboard({ className = '' }: UserDashboardProps) {
-  const [showBalances, setShowBalances] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  
+export default function UserDashboard() {
   const { address, isConnected } = useAccount();
-  
-  // 获取用户ETH余额
-  const { data: balance, refetch: refetchBalance } = useBalance({
-    address,
-  });
+  const { getUserStakeInfo, isLoading } = useStakeContract();
 
-  // 模拟用户质押数据 - 实际应用中应该从合约聚合获取
-  const userStats = {
-    totalStaked: BigInt('2500000000000000000'), // 2.5 ETH
-    totalRewards: BigInt('125000000000000000'), // 0.125 ETH
-    pendingRewards: BigInt('25000000000000000'), // 0.025 ETH
-    activeStakes: 2,
-    avgAPY: 12.5,
-    stakingDuration: 86400 * 30, // 30 days
-  };
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    try {
-      await refetchBalance();
-      // 这里可以添加其他数据的刷新逻辑
-      await new Promise(resolve => setTimeout(resolve, 1000)); // 模拟刷新时间
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
-
-  if (!isConnected) {
+  if (!isConnected || !address) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center ${className}`}>
-        <Wallet className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          连接钱包查看仪表板
-        </h3>
-        <p className="text-gray-500 dark:text-gray-400">
-          请先连接您的钱包以查看质押统计信息
-        </p>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <div className="text-center text-gray-500 dark:text-gray-400">
+          <Wallet className="w-12 h-12 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">连接钱包</h3>
+          <p>请连接您的钱包以查看质押信息</p>
+        </div>
       </div>
     );
   }
 
+  const userStake = getUserStakeInfo(address);
+  const stakedAmount = Number(userStake.amount) / 1e18;
+  const pendingRewards = Number(userStake.rewardDebt) / 1e18;
+
   return (
-    <div className={`space-y-6 ${className}`}>
-      {/* 头部统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* 钱包余额 */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Wallet className="w-5 h-5 text-blue-500" />
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                钱包余额
-              </span>
-            </div>
-            <button
-              onClick={() => setShowBalances(!showBalances)}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-            >
-              {showBalances ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-            </button>
-          </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {showBalances 
-              ? `${formatTokenValue(balance?.value || BigInt(0))} ETH`
-              : '••••••'
-            }
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            可用于质押
-          </p>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+          <Wallet className="w-5 h-5 text-white" />
         </div>
-
-        {/* 总质押金额 */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-green-500" />
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              总质押金额
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {showBalances 
-              ? `${formatTokenValue(userStats.totalStaked)} ETH`
-              : '••••••'
-            }
-          </p>
-          <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-            {userStats.activeStakes} 个活跃质押
-          </p>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">我的仪表板</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">质押概览</p>
         </div>
+      </div>
 
-        {/* 总收益 */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Gift className="w-5 h-5 text-purple-500" />
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              总收益
-            </span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* 总质押量 */}
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+          <div className="flex items-center gap-3 mb-2">
+            <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <span className="text-sm font-medium text-blue-600 dark:text-blue-400">总质押量</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {showBalances 
-              ? `${formatTokenValue(userStats.totalRewards)} ETH`
-              : '••••••'
-            }
+          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
+            {stakedAmount.toFixed(4)} ETH
           </p>
-          <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">
-            平均APY {formatPercentage(userStats.avgAPY)}
+          <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+            ≈ ${(stakedAmount * 2000).toFixed(2)} USD
           </p>
         </div>
 
         {/* 待领取奖励 */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-orange-500" />
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              待领取奖励
-            </span>
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+          <div className="flex items-center gap-3 mb-2">
+            <Award className="w-5 h-5 text-green-600 dark:text-green-400" />
+            <span className="text-sm font-medium text-green-600 dark:text-green-400">待领取奖励</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {showBalances 
-              ? `${formatTokenValue(userStats.pendingRewards)} ETH`
-              : '••••••'
-            }
+          <p className="text-2xl font-bold text-green-900 dark:text-green-100">
+            {pendingRewards.toFixed(4)} ETH
           </p>
-          <button className="text-sm text-orange-600 dark:text-orange-400 mt-1 hover:underline">
-            立即领取
+          <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+            ≈ ${(pendingRewards * 2000).toFixed(2)} USD
+          </p>
+        </div>
+
+        {/* 质押时长 */}
+        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
+          <div className="flex items-center gap-3 mb-2">
+            <Clock className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">质押时长</span>
+          </div>
+          <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">
+            {Math.floor((Date.now() - Number(userStake.lastStakeTime)) / (1000 * 60 * 60 * 24))} 天
+          </p>
+          <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+            自上次质押
+          </p>
+        </div>
+      </div>
+
+      {/* 操作按钮 */}
+      {stakedAmount > 0 && (
+        <div className="mt-6 flex gap-3">
+          <button className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200">
+            领取奖励
+          </button>
+          <button className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200">
+            管理质押
           </button>
         </div>
-      </div>
-
-      {/* 详细信息面板 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 质押概览 */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              质押概览
-            </h3>
-            <button
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              刷新
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-300">质押时长</span>
-              <span className="font-medium text-gray-900 dark:text-white">
-                {formatDuration(userStats.stakingDuration)}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-300">平均APY</span>
-              <span className="font-medium text-green-600 dark:text-green-400">
-                {formatPercentage(userStats.avgAPY)}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-300">活跃质押池</span>
-              <span className="font-medium text-gray-900 dark:text-white">
-                {userStats.activeStakes}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center py-3">
-              <span className="text-gray-600 dark:text-gray-300">收益率</span>
-              <span className="font-medium text-purple-600 dark:text-purple-400">
-                {formatPercentage((Number(userStats.totalRewards) / Number(userStats.totalStaked)) * 100)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* 快速操作 */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-            快速操作
-          </h3>
-
-          <div className="space-y-4">
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
-              <TrendingUp className="w-5 h-5" />
-              新建质押
-            </button>
-            
-            <button 
-              disabled={userStats.pendingRewards === BigInt(0)}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-            >
-              <Gift className="w-5 h-5" />
-              领取所有奖励
-            </button>
-            
-            <button className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
-              <ExternalLink className="w-5 h-5" />
-              查看交易历史
-            </button>
-          </div>
-
-          {/* 地址信息 */}
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-300">钱包地址</span>
-              <button className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                复制
-              </button>
-            </div>
-            <p className="text-sm font-mono text-gray-900 dark:text-white mt-1 break-all">
-              {address}
-            </p>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
