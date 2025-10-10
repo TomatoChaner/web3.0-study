@@ -1,0 +1,41 @@
+{
+  "name": "shib-meme-token",
+  "version": "1.0.0",
+  "description": "基于以太坊区块链平台，使用 Solidity 智能合约开发语言，实现一个 SHIB 风格的 Meme 代币合约。该项目旨在创建一个功能完整的代币生态系统，包含代币税收机制、流动性池集成和交易限制功能。",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "deploy:localhost": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:goerli": "hardhat run scripts/deploy.js --network goerli",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network mainnet",
+    "verify": "hardhat run scripts/verify.js",
+    "node": "hardhat node"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "defi",
+    "meme-token",
+    "hardhat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^3.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "chai": "^4.3.10",
+    "dotenv": "^16.6.1",
+    "ethereum-waffle": "^4.0.10",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.19.5",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.5"
+  }
+}
