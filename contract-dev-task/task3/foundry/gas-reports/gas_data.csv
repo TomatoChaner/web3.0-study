@@ -1,0 +1,31 @@
+Contract,Operation,Min_Gas,Avg_Gas,Median_Gas,Max_Gas,Calls,Notes
+BaseCalculator,Deployment,1046471,1046471,1046471,1046471,1,Deployment Cost
+BaseCalculator,add,45382,57854,45382,79582,8,Basic Addition
+BaseCalculator,subtract,45361,45361,45361,45361,1,Basic Subtraction
+BaseCalculator,multiply,45856,45862,45862,45868,2,Basic Multiplication
+BaseCalculator,divide,45441,45447,45447,45453,2,Basic Division
+BaseCalculator,batchCalculate,56815,149555,131734,277939,4,Batch Operations
+ComputationOptimizedCalculator,Deployment,1046471,1046471,1046471,1046471,1,Deployment Cost
+ComputationOptimizedCalculator,add,45382,57854,45382,79582,8,First Call
+ComputationOptimizedCalculator,add_cached,23000,23000,23000,23000,0,Cache Hit (Estimated)
+ComputationOptimizedCalculator,subtract,45361,45361,45361,45361,1,First Call
+ComputationOptimizedCalculator,subtract_cached,23000,23000,23000,23000,0,Cache Hit (Estimated)
+ComputationOptimizedCalculator,multiply,45856,45862,45862,45868,2,First Call
+ComputationOptimizedCalculator,multiply_cached,23000,23000,23000,23000,0,Cache Hit (Estimated)
+ComputationOptimizedCalculator,divide,45441,45447,45447,45453,2,First Call
+ComputationOptimizedCalculator,divide_cached,23000,23000,23000,23000,0,Cache Hit (Estimated)
+ComputationOptimizedCalculator,batchCalculate,56815,149555,131734,277939,4,Batch Operations
+ComputationOptimizedCalculator,clearCache,143244,143244,143244,143244,1,Cache Management
+ComputationOptimizedCalculator,setActive,24987,24987,24987,24987,1,State Management
+ComputationOptimizedCalculator,transferOwnership,26386,26386,26386,26386,1,Ownership Transfer
+ComputationOptimizedCalculator,version,720,720,720,720,1,Version Query
+FunctionOptimizedCalculator,Deployment,985234,985234,985234,985234,1,Deployment Cost
+FunctionOptimizedCalculator,add,24203,39933,39572,56672,7,Function Optimized Addition
+FunctionOptimizedCalculator,subtract,24203,39933,39572,56672,7,Function Optimized Subtraction
+StorageOptimizedCalculator,add,45382,57854,45382,79582,8,Storage Optimized Addition
+StorageOptimizedCalculator,subtract,42573,61073,61073,79573,2,Storage Optimized Subtraction
+StorageOptimizedCalculator,multiply,45856,62956,62956,80056,2,Storage Optimized Multiplication
+StorageOptimizedCalculator,divide,45441,45447,45447,45453,2,Storage Optimized Division
+StorageOptimizedCalculator,batchCalculate,56815,149555,131734,277939,4,Batch Operations
+GasTracker,Deployment,3176165,3176165,3176165,3176165,1,Gas Tracker Deployment
+GasTracker,measureCall,202514,225184,228225,241774,4,Gas Measurement Function

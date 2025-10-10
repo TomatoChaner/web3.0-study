@@ -1,0 +1,1 @@
+{"id":"c1bd8d6eb60957b4","source_id_to_path":{"0":"src/BaseCalculator.sol","1":"src/ComputationOptimizedCalculator.sol","2":"src/FunctionOptimizedCalculator.sol","3":"src/StorageOptimizedCalculator.sol","4":"src/interfaces/ICalculator.sol","5":"src/utils/GasTracker.sol","6":"src/utils/TestHelper.sol"},"language":"Solidity"}
