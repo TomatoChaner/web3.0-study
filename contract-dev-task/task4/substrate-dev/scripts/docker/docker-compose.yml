@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  substrate-node:
+    build:
+      context: ../../
+      dockerfile: scripts/docker/Dockerfile
+    container_name: substrate-dev-node
+    ports:
+      - "9944:9944"   # WebSocket port
+      - "9933:9933"   # RPC port
+      - "30333:30333" # P2P port
+    volumes:
+      - substrate_data:/home/substrate/data
+    environment:
+      - RUST_LOG=info
+    command: [
+      "/usr/local/bin/substrate-node",
+      "--dev",
+      "--ws-external",
+      "--rpc-external",
+      "--rpc-cors", "all",
+      "--base-path", "/home/substrate/data",
+      "--name", "substrate-dev-docker"
+    ]
+    restart: unless-stopped
+    networks:
+      - substrate-network
+
+  # Optional: Add a monitoring service
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: substrate-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - substrate-network
+    profiles:
+      - monitoring
+
+volumes:
+  substrate_data:
+  prometheus_data:
+
+networks:
+  substrate-network:
+    driver: bridge

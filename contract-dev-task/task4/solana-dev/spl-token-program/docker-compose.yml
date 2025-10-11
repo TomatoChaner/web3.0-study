@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  spl-token-program:
+    build: .
+    ports:
+      - "3000:3000"    # 前端应用端口
+      - "8899:8899"    # Solana RPC端口
+    environment:
+      - SOLANA_NETWORK=localnet
+      - RPC_URL=http://localhost:8899
+      - FRONTEND_PORT=3000
+      - DEV_MODE=true
+    volumes:
+      - ./app:/app/app:ro           # 挂载前端文件（只读）
+      - ./scripts:/app/scripts:ro   # 挂载脚本文件（只读）
+      - solana_data:/root/.config/solana  # 持久化Solana配置
+      - cargo_cache:/root/.cargo    # 缓存Cargo依赖
+    networks:
+      - solana-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # 可选：独立的Solana验证器服务
+  solana-validator:
+    image: solanalabs/solana:v1.18.0
+    command: >
+      bash -c "
+        solana-test-validator 
+        --reset 
+        --rpc-bind-address 0.0.0.0 
+        --rpc-port 8899
+        --log
+      "
+    ports:
+      - "8900:8899"  # 映射到不同端口避免冲突
+    volumes:
+      - validator_data:/root/.config/solana
+    networks:
+      - solana-network
+    profiles:
+      - standalone  # 使用 docker-compose --profile standalone up 启动
+
+volumes:
+  solana_data:
+    driver: local
+  cargo_cache:
+    driver: local
+  validator_data:
+    driver: local
+
+networks:
+  solana-network:
+    driver: bridge
